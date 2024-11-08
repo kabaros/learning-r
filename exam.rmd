@@ -1,0 +1,159 @@
+---
+title: "myexam"
+output: html_document
+date: "2024-11-08"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1
+
+```         
+A sports scientist collects strength data from two groups of students. The first group is a group of athletes who might be expected to be strong, and the second group is a control group of nonathletic students.
+The first group has strength ratings of: 
+c(127.8, 133.6, 129.7, 130.4, 128.7, 132.6, 129.6, 132.6)
+And the second group has strength ratings of:
+c(137.9, 107.3, 126.9, 113.3, 127.9, 104.1)
+Is there evidence that the first group is actually stronger than the second?
+(a) State a sensible null hypothesis
+(b) State the precise definition of p-value and explain what “more extreme” means in this
+context
+(c) Is a one-sided or two-sided test needed? justify
+(d) Perform a student t-test using R and interpret
+```
+
+```{r sports}
+group1 <- c(127.8, 133.6, 129.7, 130.4, 128.7, 132.6, 129.6, 132.6)
+group2 <- c(137.9, 107.3, 126.9, 113.3, 127.9, 104.1)
+```
+
+### a. null hypothesis
+
+The null hypothesis is that group1 of athletes and group2 of non-athletes have the same strength on average.
+
+H~0~: mean(group1) == mean(group2)
+
+H~1~: mean(group1) \> mean(group2)
+
+### b. p-value
+
+The p-value is the probability, if the null is true, of obtaining the observation or an observation more extreme. More extreme being that group1 is stronger than group 2 of non-athletes.
+
+### c. one-sided
+
+This is one-side, because we expect the athletes to be stronger than the non-athletes.
+
+### d. student-test
+
+```{r}
+t.test(group1, group2, alternative = "greater")
+```
+
+The `p-value` is less than 5%. The result is statistically significant, and we have strong evidence that gorup 1 of athletes is stronger than group 2 of non-athletes.
+
+## Question 2
+
+```         
+Random variable X is drawn from a normal distribution with mean 6.71 and standard devi-
+ation 2.31.
+(a) Calculate the probability of X being less than 3.99.
+(b) What is the probability of X exceeding 6.11?
+(c) What is the probability of X lying between 6.72 and 9.08?
+(d) Verify your answers to parts (a) and (b) above using numerical sampling.
+(e) (Harder) verify your answers to part (c) above using numerical sampling.
+```
+
+### a. The probbility of X being less than 3.99
+
+```{r}
+mean <- 6.71
+sd <-2.31
+pnorm(3.99, mean = mean, sd = sd)
+```
+
+The probability of X being less than 3.99 is `0.1195002`
+
+### b. the probability of X exceeding 6.11
+
+```{r}
+1 - pnorm(6.11, mean = mean, sd = sd)
+```
+
+The probability of X exceeding 6.11 is `0.6024679`.
+
+### c. the probability of X lying between 6.72 and 9.08
+
+```{r}
+pnorm(9.08, mean = mean, sd = sd) - pnorm(6.72, mean = mean, sd = sd)
+```
+
+The probability of X lying between 6.72 and 9.08 is `0.3458211`.
+
+### d. Verify your answers to parts (a) and (b) above using numerical sampling.
+
+```{r}
+sample <- rnorm(1e6, mean = mean, sd = sd)
+table(sample < 3.99) / 1e6
+table(sample > 6.11) / 1e6
+
+```
+
+Using numerical sampling, the probabilities using numerical sampling are very close (to three decimal places) to the calculated values of `0.1195002`, and `0.6024679`.
+
+### (Harder) verify your answers to part (c) above using numerical sampling.
+
+```{r}
+sample <- rnorm(1e6, mean = mean, sd = sd)
+table(sample > 6.72 & sample < 9.08) / 1e6
+```
+
+The probability using numerical sampling is the same (to three decimal places) to the calculated value of `0.3458211`.
+
+## Question 3
+
+```         
+A structural scientist is studying an engine that has 8 cylinders in it. He takes an engine
+and subjects it to a standard operational test. The cylinders are subject to stresses and as
+time goes by sometimes develop cracks. The probability of a cylinder developing a crack
+(this is a tiny crack, visible only with specialized equipment) is 0.318.
+(a) If the cylinders’ status is independent, what distribution specifies the total number of
+cracked cylinders?
+(b) Using dbinom() or otherwise, what is the probability that exactly two cylinders are
+cracked?
+(c) What is the probability that four or more cylinders are cracked?
+(d) A new engine is subject to the operational test but using a different type of lubricating
+oil, which is claimed to reduce stress in the engine. The scientist finds that only one
+cylinder is cracked. State a sensible null hypothesis, and report its p-value. Interpret
+your finding in a way that a busy engineer, who is not a statistician, could understand
+(e) [harder] What is the maximum value of p which will ensure that only 10% of engines
+suffer four or more cracked cylinders? (you need only quote an approximate solution;
+2 decimal places is sufficient for maximum credit).
+```
+
+### a. what distribution specifies the total number of cracked cylinders
+
+The binomial distribution.
+
+### b. Using dbinom() or otherwise, what is the probability that exactly two cylinders are cracked
+
+```{r}
+dbinom(2, 8, prob = 0.318)
+```
+
+The probability is `0.2849171`.
+
+### c. What is the probability that four or more cylinders are cracked?
+
+**WRONG** I USED 1 - pbinom(4,....), it should be 1 - pbinom(3,....)
+
+```{r}
+1 - pbinom(3, 8, 0.318)
+```
+
+another way to check:
+
+```{r}
+sum(dbinom(4:8, 8, 0.318))
+```
