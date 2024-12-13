@@ -146,7 +146,7 @@ The probability is `0.2849171`.
 
 ### c. What is the probability that four or more cylinders are cracked?
 
-**WRONG** I USED 1 - pbinom(4,....), it should be 1 - pbinom(3,....)
+**I Got this WRONG** I USED `1 - pbinom(4,....)`, it should be `1 - pbinom(3,....)` - check page 34 for explanation
 
 ```{r}
 1 - pbinom(3, 8, 0.318)
@@ -157,3 +157,75 @@ another way to check:
 ```{r}
 sum(dbinom(4:8, 8, 0.318))
 ```
+
+### d. calculating p-value
+
+**A new engine is subject to the operational test but using a different type of lubricating oil, which is claimed to reduce stress in the engine. The scientist finds that only one cylinder is cracked. State a sensible null hypothesis, and report its p-value. Interpret your finding in a way that a busy engineer, who is not a statistician, could understand**
+
+1.  The null hypothesis is that the new oil has the same probability of developing a cracks on average as the old oil.
+
+H~0~: p = 0.318
+
+H~1~: p \< 0.318
+
+2.  We realise this is a binomial distribution with the the standard deviation = `sqrt(np * (1-p))` and expected value = `n*p`
+
+```{r}
+sd <- sqrt(8* 0.318*(1-0.318))
+expected <- 8 * 0.318
+sd
+expected
+```
+
+3.  The p-value is the probability, if the null is true, of obtaining the observation or an observation more extreme. More extreme, in this case, is lower than the observed value of one crack.
+
+4.  
+
+```{r}
+Z <- (1- expected) / sd
+Z
+pnorm(Z)
+```
+
+The p-value is greater than 0.05. We fail to reject the null, and make no conclusions. The data is inconclusive.
+
+### or another simpler way
+
+```{r}
+sum(dbinom(0:1, 8, 0.318))
+```
+
+### e. maximum value of p
+
+```
+[harder] What is the maximum value of p which will ensure that only 10% of engines suffer four or more cracked cylinders? (you need only quote an approximate solution; 2 decimal places is sufficient for maximum credit).
+```
+
+... 
+
+## Question 4
+
+```{r}
+hours <-
+c(20.7, 21.5, 21.6, 19.8, 20.5, 22.6, 18.4, 21.2, 20, 22.5, 20.5,
+20.5, 19.8, 21.6, 21.3, 18.6, 22.4, 22.5, 19.8, 18.8, 21.8, 20.3,
+21.2, 18.5, 20.9)
+
+grades <-
+c(8.3, 10.4, 9.6, 10.2, 8.8, 9.2, 8.5, 9.7, 9.1, 11.4, 9.2, 9.3,
+9.2, 9.6, 8, 8.5, 9.6, 10, 9.5, 10.2, 9.1, 8.8, 10, 7.8, 8.8)
+```
+
+1. The null is that the grades for students who spend more hours similar on average to the ones who spend less hours.
+H~0~: grade()
+
+2. The p-value is the probability, given the null is true, to obtain the observation or an observation more extreme. More extreme in this case, is a grade equal or higher than.
+
+3. This is one-sided, because we expect that studying more hours leads to a better grade.
+
+4. Linear Regression????
+
+
+
+## Question 5
+
